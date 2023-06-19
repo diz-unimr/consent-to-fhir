@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"consent-to-fhir/pkg/config"
 	"consent-to-fhir/pkg/model"
+	"errors"
 	"fmt"
 	"github.com/samply/golang-fhir-models/fhir-models/fhir"
 	log "github.com/sirupsen/logrus"
@@ -12,19 +13,25 @@ import (
 )
 
 type GicsClient struct {
+	Auth             *config.Auth
 	IdentifierSystem string
 	RequestUrl       string
 }
 
 func NewGicsClient(config config.AppConfig) *GicsClient {
-	return &GicsClient{
+	client := &GicsClient{
 		RequestUrl:       config.Gics.Fhir.Base + "/$currentConsentForPersonAndTemplate",
 		IdentifierSystem: "https://ths-greifswald.de/fhir/gics/identifiers/" + config.Gics.SignerId,
 	}
+	if config.Gics.Fhir.Auth.User != "" && config.Gics.Fhir.Auth.Password != "" {
+		client.Auth = &config.Gics.Fhir.Auth
+	}
+
+	return client
 }
 
 func (c *GicsClient) GetConsentStatus(sid model.SignerId, t model.ConsentTemplateKey) (*fhir.Bundle, error) {
-	template := fmt.Sprintf("%s;%s;%s", t.DomainName, t.Name, t.Version)
+	template := fmt.Sprintf("%s;%s;%s", *t.DomainName, *t.Name, *t.Version)
 	//default
 	ignoreVersionNumber := false
 
@@ -34,7 +41,7 @@ func (c *GicsClient) GetConsentStatus(sid model.SignerId, t model.ConsentTemplat
 		Parameter: []fhir.ParametersParameter{
 			{
 				Name:            "personIdentifier",
-				ValueIdentifier: &fhir.Identifier{System: &sid.IdType, Value: &sid.Id},
+				ValueIdentifier: &fhir.Identifier{System: &c.IdentifierSystem, Value: &sid.Id},
 			},
 			{
 				Name:        "domain",
@@ -55,21 +62,24 @@ func (c *GicsClient) GetConsentStatus(sid model.SignerId, t model.ConsentTemplat
 		return nil, err
 	}
 
-	response, err := http.Post(
-		c.RequestUrl,
-		"application/fhir+json",
-		bytes.NewBuffer(r))
+	response, err := c.postRequest(r)
 
 	if err != nil {
 		log.WithError(err).Error("POST request to gICS failed for: " + c.RequestUrl)
 		return nil, err
 	}
+	defer closeBody(response.Body)
 
 	responseData, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.WithError(err).Fatal("Unable to parse gICS get consent status response")
 	}
-	fmt.Println(string(responseData))
+	if response.StatusCode != http.StatusOK {
+		err = errors.New("POST request to gICS failed: " + string(responseData))
+		log.WithField("statusCode", response.StatusCode).Error(err.Error())
+		return nil, err
+	}
+
 	bundle, err := fhir.UnmarshalBundle(responseData)
 	if err != nil {
 		log.WithError(err).Fatal("Failed to deserialize FHIR response from  gICS. Expected 'Bundle'")
@@ -77,4 +87,26 @@ func (c *GicsClient) GetConsentStatus(sid model.SignerId, t model.ConsentTemplat
 	}
 
 	return &bundle, nil
+}
+
+func (c *GicsClient) postRequest(body []byte) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodPost, c.RequestUrl,
+		bytes.NewBuffer(body))
+	if err != nil {
+		log.WithError(err).Fatal("Failed to create POST request")
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/fhir+json")
+	if c.Auth != nil {
+		req.SetBasicAuth(c.Auth.User, c.Auth.Password)
+	}
+
+	return http.DefaultClient.Do(req)
+}
+
+func closeBody(body io.ReadCloser) {
+	err := body.Close()
+	if err != nil {
+		log.WithError(err).Error("Failed to close response body")
+	}
 }

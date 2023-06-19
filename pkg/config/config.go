@@ -1,7 +1,9 @@
 package config
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"os"
 	"strings"
 )
 
@@ -47,7 +49,17 @@ type Auth struct {
 	Password string `mapstructure:"password"`
 }
 
-func LoadConfig(path string) (config AppConfig, err error) {
+func LoadConfig() AppConfig {
+	c, err := parseConfig(".")
+	if err != nil {
+		log.WithError(err).Fatal("Unable to load config file")
+		os.Exit(1)
+	}
+
+	return *c
+}
+
+func parseConfig(path string) (config *AppConfig, err error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
 	viper.SetConfigType("yml")
@@ -57,7 +69,7 @@ func LoadConfig(path string) (config AppConfig, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	err = viper.Unmarshal(&config)

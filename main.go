@@ -8,19 +8,11 @@ import (
 )
 
 func main() {
-	appConfig := loadConfig()
+	appConfig := config.LoadConfig()
 	configureLogger(appConfig.App)
 
 	p := kafka.NewProcessor(appConfig)
 	p.Run()
-}
-
-func loadConfig() config.AppConfig {
-	c, err := config.LoadConfig(".")
-	if err != nil {
-		log.WithError(err).Fatal("Unable to load config file")
-	}
-	return c
 }
 
 func configureLogger(config config.App) {
