@@ -2,7 +2,7 @@ package kafka
 
 import (
 	"consent-to-fhir/pkg/config"
-	"consent-to-fhir/pkg/consent"
+	"consent-to-fhir/pkg/mapper"
 	cKafka "github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	log "github.com/sirupsen/logrus"
 	"os"
@@ -14,13 +14,13 @@ import (
 
 type Processor struct {
 	config config.AppConfig
-	mapper *consent.Mapper
+	mapper *mapper.GicsMapper
 }
 
 func NewProcessor(config config.AppConfig) *Processor {
 	return &Processor{
 		config: config,
-		mapper: consent.NewConsentMapper(config),
+		mapper: mapper.NewGicsMapper(config),
 	}
 }
 

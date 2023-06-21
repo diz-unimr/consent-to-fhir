@@ -1,6 +1,9 @@
 app:
-  name: consent-to-consent
+  name: mapper-to-fhir
   log-level: info
+  mapper:
+    consent-system: https://fhir.diz.uni-marburg.de/sid/consent-id
+    patient-system: https://fhir.diz.uni-marburg.de/sid/patient-id
 
 kafka:
   bootstrap-servers: localhost:9092
@@ -12,7 +15,7 @@ kafka:
     key-password: private-key-password
   input-topic:
   output-topic:
-  num-consumers: 3
+  num-consumers: 1
 
 gics:
   signer-id: "Patienten-ID"

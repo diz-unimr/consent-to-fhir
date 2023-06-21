@@ -3,35 +3,38 @@ package client
 import (
 	"bytes"
 	"consent-to-fhir/pkg/config"
-	"consent-to-fhir/pkg/model"
 	"errors"
-	"fmt"
 	"github.com/samply/golang-fhir-models/fhir-models/fhir"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type GicsClient struct {
 	Auth             *config.Auth
 	IdentifierSystem string
 	RequestUrl       string
+	TargetProfile    string
 }
 
 func NewGicsClient(config config.AppConfig) *GicsClient {
 	client := &GicsClient{
-		RequestUrl:       config.Gics.Fhir.Base + "/$currentConsentForPersonAndTemplate",
+		RequestUrl:       config.Gics.Fhir.Base + "/$currentPolicyStatesForPerson",
 		IdentifierSystem: "https://ths-greifswald.de/fhir/gics/identifiers/" + config.Gics.SignerId,
+		TargetProfile:    "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung",
 	}
-	if config.Gics.Fhir.Auth.User != "" && config.Gics.Fhir.Auth.Password != "" {
-		client.Auth = &config.Gics.Fhir.Auth
+	if config.Gics.Fhir.Auth != nil {
+		client.Auth = config.Gics.Fhir.Auth
 	}
 
 	return client
 }
 
-func (c *GicsClient) GetConsentStatus(sid model.SignerId, t model.ConsentTemplateKey) (*fhir.Bundle, error) {
-	template := fmt.Sprintf("%s;%s;%s", *t.DomainName, *t.Name, *t.Version)
+func (c *GicsClient) GetConsentStatus(signerId string, domain string, date string) (*fhir.Bundle, error) {
+	//template := fmt.Sprintf("%s;%s;%s", *t.DomainName, *t.Name, *t.Version)
+	date = strings.Fields(date)[0]
+
 	//default
 	ignoreVersionNumber := false
 
@@ -41,19 +44,23 @@ func (c *GicsClient) GetConsentStatus(sid model.SignerId, t model.ConsentTemplat
 		Parameter: []fhir.ParametersParameter{
 			{
 				Name:            "personIdentifier",
-				ValueIdentifier: &fhir.Identifier{System: &c.IdentifierSystem, Value: &sid.Id},
+				ValueIdentifier: &fhir.Identifier{System: &c.IdentifierSystem, Value: &signerId},
 			},
 			{
 				Name:        "domain",
-				ValueString: t.DomainName,
+				ValueString: &domain,
 			},
-			{
-				Name:        "template",
-				ValueString: &template,
-			},
+			//{
+			//	Name:           "_profile",
+			//	ValueCanonical: &c.TargetProfile,
+			//},
 			{
 				Name:         "ignore-version-number",
 				ValueBoolean: &ignoreVersionNumber,
+			},
+			{
+				Name:      "request-date",
+				ValueDate: &date,
 			},
 		},
 	}
@@ -72,7 +79,7 @@ func (c *GicsClient) GetConsentStatus(sid model.SignerId, t model.ConsentTemplat
 
 	responseData, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.WithError(err).Fatal("Unable to parse gICS get consent status response")
+		log.WithError(err).Fatal("Unable to parse gICS get mapper status response")
 	}
 	if response.StatusCode != http.StatusOK {
 		err = errors.New("POST request to gICS failed: " + string(responseData))

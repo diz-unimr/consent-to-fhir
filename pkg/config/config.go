@@ -16,6 +16,12 @@ type AppConfig struct {
 type App struct {
 	Name     string `mapstructure:"name"`
 	LogLevel string `mapstructure:"log-level"`
+	Mapper   Mapper `mapstructure:"mapper"`
+}
+
+type Mapper struct {
+	ConsentSystem *string `mapstructure:"consent-system"`
+	PatientSystem *string `mapstructure:"patient-system"`
 }
 
 type Kafka struct {
@@ -41,7 +47,7 @@ type Ssl struct {
 
 type Fhir struct {
 	Base string `mapstructure:"base"`
-	Auth Auth   `mapstructure:"auth"`
+	Auth *Auth  `mapstructure:"auth"`
 }
 
 type Auth struct {
