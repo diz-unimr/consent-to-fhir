@@ -37,7 +37,7 @@ func (m *GicsMapper) Process(data []byte) *fhir.Bundle {
 
 	bundle, err := m.toFhir(n)
 	if err != nil {
-		log.WithError(err).Error("Failed to map mapper")
+		log.WithError(err).Error("Failed to map consent")
 		return nil
 	}
 
@@ -46,7 +46,7 @@ func (m *GicsMapper) Process(data []byte) *fhir.Bundle {
 
 func (m *GicsMapper) toFhir(n model.Notification) (*fhir.Bundle, error) {
 
-	// get current mapper state from gics
+	// get current consent state from gics
 	signerId := n.ConsentKey.SignerIds[0]
 	bundle, err := m.Client.GetConsentStatus(
 		signerId.Id,
@@ -54,7 +54,7 @@ func (m *GicsMapper) toFhir(n model.Notification) (*fhir.Bundle, error) {
 		*n.ConsentKey.ConsentDate,
 	)
 	if err != nil {
-		log.Error("Request to get mapper status from gICS failed")
+		log.Error("Request to get consent status from gICS failed")
 		return nil, err
 	}
 
@@ -74,7 +74,7 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid strin
 		return nil, errors.New("no Consent resource found in gICS FHIR bundle")
 	}
 
-	// prepare mapper resource & merge policies
+	// prepare consent resource & merge policies
 	c, _ := fhir.UnmarshalConsent(bundle.Entry[0].Resource)
 	c.Provision = &fhir.ConsentProvision{
 		Type:      Of(fhir.ConsentProvisionTypeDeny),
@@ -119,7 +119,7 @@ func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, poli
 		Value:  &id,
 	}}
 
-	// mapper policy
+	// consent policy
 	policyUri := GetPolicyUri()(policyName)
 	c.Policy = []fhir.ConsentPolicy{{Uri: &policyUri}}
 	c.PolicyRule = &fhir.CodeableConcept{Text: &policyName}

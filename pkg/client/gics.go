@@ -79,7 +79,7 @@ func (c *GicsClient) GetConsentStatus(signerId string, domain string, date strin
 
 	responseData, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.WithError(err).Fatal("Unable to parse gICS get mapper status response")
+		log.WithError(err).Fatal("Unable to parse gICS get consent status response")
 	}
 	if response.StatusCode != http.StatusOK {
 		err = errors.New("POST request to gICS failed: " + string(responseData))
