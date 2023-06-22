@@ -37,8 +37,8 @@ Currently, only the MII Broad consent (version 1.6.d) and the FHIR Consent modul
 |----------------------------------|------------------------------------------------|---------------------------------------------|
 | `app.name`                       | consent-to-fhir                                | Application name                            |
 | `app.log-level`                  | info                                           | Log level (error,warn,info,debug,trace)     |
-| `app.mapper.consent-system`      | https://fhir.diz.uni-marburg.de/sid/consent-id | HTTP endpoint Basic Auth user               |
-| `app.mapper.patient-system`      | https://fhir.diz.uni-marburg.de/sid/patient-id | HTTP endpoint Basic Auth password           |
+| `app.mapper.consent-system`      | https://fhir.diz.uni-marburg.de/sid/consent-id | Consent FHIR identifier system              |
+| `app.mapper.patient-system`      | https://fhir.diz.uni-marburg.de/sid/patient-id | Patient FHIR identifier system              |
 | `kafka.bootstrap-servers`        | localhost:9092                                 | Kafka brokers                               |
 | `kafka.security-protocol`        | ssl                                            | Kafka communication protocol                |
 | `kafka.ssl.ca-location`          | /app/cert/kafka-ca.pem                         | Kafka CA certificate location               |
