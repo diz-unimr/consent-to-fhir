@@ -1,6 +1,6 @@
 # consent-to-fhir
 ![go](https://github.com/diz-unimr/consent-to-fhir/actions/workflows/build.yml/badge.svg) ![docker](https://github.com/diz-unimr/consent-to-fhir/actions/workflows/release.yml/badge.svg) [![codecov](https://codecov.io/gh/diz-unimr/consent-to-fhir/branch/main/graph/badge.svg?token=D66XMZ5ALR)](https://codecov.io/gh/diz-unimr/consent-to-fhir)
-> Kafka processor to map gICS consent data to FHIR 🔥 resources
+> Kafka processor to map gICS consent data to FHIR 🔥
 
 This project consists of a Kafka consumer/producer to read gICS notification data from an input topic
 and send the mapped FHIR Consent resources to an output topic.
@@ -51,7 +51,7 @@ Currently, only the MII Broad consent (version 1.6.d) and the FHIR Consent modul
 | `gics.signer-id`                 | Patienten-ID                                   | Target consent signerId                     |
 | `gics.fhir.base`                 |                                                | TTP-FHIR base url                           |
 | `gics.fhir.auth.user`            |                                                | TTP-FHIR Basic auth user                    |
-| `gics.fhir.auth.password`        |                                                | TTP-FHIR< Basic auth password               |
+| `gics.fhir.auth.password`        |                                                | TTP-FHIR Basic auth password                |
 
 
 ### Environment variables
