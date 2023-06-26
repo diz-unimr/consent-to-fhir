@@ -143,6 +143,16 @@ func mergePolicies(entries []fhir.BundleEntry) []fhir.ConsentProvision {
 
 	for _, e := range entries {
 		c, _ := fhir.UnmarshalConsent(e.Resource)
+		var miiCode fhir.CodeableConcept
+		for _, code := range c.Provision.Code {
+			for _, coding := range code.Coding {
+				if coding.System != nil && *coding.System == MiiProvisionCode {
+					miiCode = code
+				}
+			}
+		}
+		c.Provision.Code = []fhir.CodeableConcept{miiCode}
+
 		p = append(p, *c.Provision)
 	}
 

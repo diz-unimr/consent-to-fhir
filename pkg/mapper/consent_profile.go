@@ -8,6 +8,7 @@ const (
 	LoincCategoryCode   = "57016-8"
 	MiiCategorySystem   = "https://www.medizininformatik-initiative.de/fhir/modul-consent/CodeSystem/mii-cs-consent-consent_category"
 	MiiCategoryCode     = "2.16.840.1.113883.3.1937.777.24.2.184"
+	MiiProvisionCode    = "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3"
 )
 
 type ConsentProfile struct {
