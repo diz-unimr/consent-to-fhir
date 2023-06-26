@@ -163,7 +163,8 @@ func setDomainExtension(extensions []fhir.Extension, domain *string) []fhir.Exte
 			}
 
 			if refIndex >= 0 {
-				e.Extension[refIndex] = fhir.Extension{Url: "domain", ValueString: domain}
+				domainRef := "ResearchStudy/" + *domain
+				e.Extension[refIndex] = fhir.Extension{Url: "domain", ValueReference: &fhir.Reference{Reference: &domainRef}}
 			}
 		}
 	}
