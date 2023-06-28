@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/samply/golang-fhir-models/fhir-models/fhir"
 	log "github.com/sirupsen/logrus"
+	"strings"
 )
 
 type GicsMapper struct {
@@ -120,10 +121,10 @@ func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, poli
 	}}
 
 	// consent policy
-	policyUri := GetPolicyUri()(policyName)
-	c.Policy = []fhir.ConsentPolicy{{Uri: &policyUri}}
-	c.PolicyRule = &fhir.CodeableConcept{Text: &policyName}
-	// remove source reference
+	policy := GetPolicy()(policyName)
+	c.Policy = []fhir.ConsentPolicy{{Uri: policy.Uri}}
+	// remove policyRule and source reference
+	c.PolicyRule = nil
 	c.SourceReference = nil
 
 	// set patient
@@ -133,7 +134,7 @@ func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, poli
 	}
 
 	// set domain extension
-	c.Extension = setDomainExtension(c.Extension, domain)
+	c.Extension = m.setDomainExtension(c.Extension, domain)
 
 	return c
 }
@@ -143,25 +144,45 @@ func mergePolicies(entries []fhir.BundleEntry) []fhir.ConsentProvision {
 
 	for _, e := range entries {
 		c, _ := fhir.UnmarshalConsent(e.Resource)
-		var miiCode fhir.CodeableConcept
-		for _, code := range c.Provision.Code {
-			for _, coding := range code.Coding {
-				if coding.System != nil && *coding.System == MiiProvisionCode {
-					miiCode = code
-				}
-			}
-		}
-		c.Provision.Code = []fhir.CodeableConcept{miiCode}
 
+		// there is only single mii code per provision
+		miiCode := getSingleMiiCode(c.Provision.Code)
+		if miiCode == nil {
+			log.WithError(errors.New("no MII coding found")).
+				Warn("Failed to map provision. Consent resource might be incomplete")
+			continue
+		}
+
+		c.Provision.Code = []fhir.CodeableConcept{*miiCode}
 		p = append(p, *c.Provision)
 	}
 
 	return p
 }
 
-func setDomainExtension(extensions []fhir.Extension, domain *string) []fhir.Extension {
+func getSingleMiiCode(codes []fhir.CodeableConcept) *fhir.CodeableConcept {
+	for _, c := range codes {
+		for _, coding := range c.Coding {
+			if coding.System != nil && *coding.System == MiiProvisionCode {
+				coding.Display = fixDisplay(coding.Display)
+				c.Coding = []fhir.Coding{coding}
+				return &c
+			}
+		}
+	}
+	return nil
+}
 
-	//var domainRef fhir.Extension
+func fixDisplay(display *string) *string {
+	if display != nil {
+		// replace underscores for correct display values
+		return Of(strings.Replace(*display, "_", " ", -1))
+	}
+	return display
+}
+
+func (m *GicsMapper) setDomainExtension(extensions []fhir.Extension, domain *string) []fhir.Extension {
+
 	for _, e := range extensions {
 		if e.Url == "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference" {
 			refIndex := -1
@@ -173,8 +194,8 @@ func setDomainExtension(extensions []fhir.Extension, domain *string) []fhir.Exte
 			}
 
 			if refIndex >= 0 {
-				domainRef := "ResearchStudy/" + *domain
-				e.Extension[refIndex] = fhir.Extension{Url: "domain", ValueReference: &fhir.Reference{Reference: &domainRef}}
+				domainRef := fmt.Sprintf("ResearchStudy?identifier=%s|%s", *m.Config.DomainSystem, *domain)
+				e.Extension[refIndex] = fhir.Extension{Url: "domain", ValueReference: &fhir.Reference{Reference: &domainRef, Display: domain}}
 			}
 		}
 	}

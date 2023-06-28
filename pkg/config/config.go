@@ -22,6 +22,7 @@ type App struct {
 type Mapper struct {
 	ConsentSystem *string `mapstructure:"consent-system"`
 	PatientSystem *string `mapstructure:"patient-system"`
+	DomainSystem  *string `mapstructure:"domain-system"`
 }
 
 type Kafka struct {

@@ -33,25 +33,26 @@ Currently, only the MII Broad consent (version 1.6.d) and the FHIR Consent modul
 
 ## Configuration properties
 
-| Name                             | Default                                        | Description                                 |
-|----------------------------------|------------------------------------------------|---------------------------------------------|
-| `app.name`                       | consent-to-fhir                                | Application name                            |
-| `app.log-level`                  | info                                           | Log level (error,warn,info,debug,trace)     |
-| `app.mapper.consent-system`      | https://fhir.diz.uni-marburg.de/sid/consent-id | Consent FHIR identifier system              |
-| `app.mapper.patient-system`      | https://fhir.diz.uni-marburg.de/sid/patient-id | Patient FHIR identifier system              |
-| `kafka.bootstrap-servers`        | localhost:9092                                 | Kafka brokers                               |
-| `kafka.security-protocol`        | ssl                                            | Kafka communication protocol                |
-| `kafka.ssl.ca-location`          | /app/cert/kafka-ca.pem                         | Kafka CA certificate location               |
-| `kafka.ssl.certificate-location` | /app/cert/app-cert.pem                         | Client certificate location                 |
-| `kafka.ssl.key-location`         | /app/cert/app-key.pem                          | Client key location                         |
-| `kafka.ssl.key-password`         | private-key-password                           | Client key password                         |
-| `kafka.input-topic`              |                                                | Notification input topic                    |
-| `kafka.output-topic`             |                                                | Consent FHIR output topic                   |
-| `kafka.num-consumers`            | 1                                              | Number of concurrent Kafka consumer threads |
-| `gics.signer-id`                 | Patienten-ID                                   | Target consent signerId                     |
-| `gics.fhir.base`                 |                                                | TTP-FHIR base url                           |
-| `gics.fhir.auth.user`            |                                                | TTP-FHIR Basic auth user                    |
-| `gics.fhir.auth.password`        |                                                | TTP-FHIR Basic auth password                |
+| Name                             | Default                                                    | Description                                 |
+|----------------------------------|------------------------------------------------------------|---------------------------------------------|
+| `app.name`                       | consent-to-fhir                                            | Application name                            |
+| `app.log-level`                  | info                                                       | Log level (error,warn,info,debug,trace)     |
+| `app.mapper.consent-system`      | https://fhir.diz.uni-marburg.de/sid/consent-id             | Consent FHIR identifier system              |
+| `app.mapper.patient-system`      | https://fhir.diz.uni-marburg.de/sid/patient-id             | Patient FHIR identifier system              |
+| `app.mapper.domain-system`       | https://fhir.diz.uni-marburg.de/fhir/sid/consent-domain-id | Consent domain FHIR identifier system       |
+| `kafka.bootstrap-servers`        | localhost:9092                                             | Kafka brokers                               |
+| `kafka.security-protocol`        | ssl                                                        | Kafka communication protocol                |
+| `kafka.ssl.ca-location`          | /app/cert/kafka-ca.pem                                     | Kafka CA certificate location               |
+| `kafka.ssl.certificate-location` | /app/cert/app-cert.pem                                     | Client certificate location                 |
+| `kafka.ssl.key-location`         | /app/cert/app-key.pem                                      | Client key location                         |
+| `kafka.ssl.key-password`         | private-key-password                                       | Client key password                         |
+| `kafka.input-topic`              |                                                            | Notification input topic                    |
+| `kafka.output-topic`             |                                                            | Consent FHIR output topic                   |
+| `kafka.num-consumers`            | 1                                                          | Number of concurrent Kafka consumer threads |
+| `gics.signer-id`                 | Patienten-ID                                               | Target consent signerId                     |
+| `gics.fhir.base`                 |                                                            | TTP-FHIR base url                           |
+| `gics.fhir.auth.user`            |                                                            | TTP-FHIR Basic auth user                    |
+| `gics.fhir.auth.password`        |                                                            | TTP-FHIR Basic auth password                |
 
 
 ### Environment variables

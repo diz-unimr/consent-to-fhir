@@ -4,6 +4,7 @@ app:
   mapper:
     consent-system: https://fhir.diz.uni-marburg.de/sid/consent-id
     patient-system: https://fhir.diz.uni-marburg.de/sid/patient-id
+    domain-system: https://fhir.diz.uni-marburg.de/fhir/sid/consent-domain-id
 
 kafka:
   bootstrap-servers: localhost:9092
