@@ -50,10 +50,6 @@ func (c *GicsClient) GetConsentStatus(signerId string, domain string, date strin
 				Name:        "domain",
 				ValueString: &domain,
 			},
-			//{
-			//	Name:           "_profile",
-			//	ValueCanonical: &c.TargetProfile,
-			//},
 			{
 				Name:         "ignore-version-number",
 				ValueBoolean: &ignoreVersionNumber,

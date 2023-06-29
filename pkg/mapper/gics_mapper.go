@@ -121,7 +121,7 @@ func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, poli
 	}}
 
 	// consent policy
-	policy := GetPolicy()(policyName)
+	policy := m.ConsentProfile.GetPolicy(policyName)
 	c.Policy = []fhir.ConsentPolicy{{Uri: policy.Uri}}
 	// remove policyRule and source reference
 	c.PolicyRule = nil
@@ -145,7 +145,12 @@ func mergePolicies(entries []fhir.BundleEntry) []fhir.ConsentProvision {
 	for _, e := range entries {
 		c, _ := fhir.UnmarshalConsent(e.Resource)
 
-		// there is only single mii code per provision
+		if *c.Provision.Type == fhir.ConsentProvisionTypeDeny {
+			// already denied by first level provision
+			continue
+		}
+
+		// there is only a single mii code per provision
 		miiCode := getSingleMiiCode(c.Provision.Code)
 		if miiCode == nil {
 			log.WithError(errors.New("no MII coding found")).
