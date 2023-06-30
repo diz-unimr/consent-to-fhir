@@ -14,7 +14,7 @@ import (
 )
 
 type GicsMapper struct {
-	Client         *client.GicsClient
+	Client         client.GicsClient
 	Config         config.Mapper
 	ConsentProfile *ConsentProfile
 }
@@ -100,7 +100,6 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid strin
 					Method: fhir.HTTPVerbPUT,
 					Url:    fmt.Sprintf("Consent?identifier=%s|%s", *m.Config.ConsentSystem, *r.Id),
 				}}}}, nil
-
 }
 
 func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, policyName string) fhir.Consent {

@@ -11,15 +11,29 @@ import (
 	"strings"
 )
 
-type GicsClient struct {
+type GicsClient interface {
+	GetConsentStatus(signerId string, domain string, date string) (*fhir.Bundle, error)
+	GetRequestUrl() string
+	GetAuth() *config.Auth
+}
+
+type GicsHttpClient struct {
 	Auth             *config.Auth
 	IdentifierSystem string
 	RequestUrl       string
 	TargetProfile    string
 }
 
-func NewGicsClient(config config.AppConfig) *GicsClient {
-	client := &GicsClient{
+func (c *GicsHttpClient) GetRequestUrl() string {
+	return c.RequestUrl
+}
+
+func (c *GicsHttpClient) GetAuth() *config.Auth {
+	return c.Auth
+}
+
+func NewGicsClient(config config.AppConfig) *GicsHttpClient {
+	client := &GicsHttpClient{
 		RequestUrl:       config.Gics.Fhir.Base + "/$currentPolicyStatesForPerson",
 		IdentifierSystem: "https://ths-greifswald.de/fhir/gics/identifiers/" + config.Gics.SignerId,
 		TargetProfile:    "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung",
@@ -31,8 +45,7 @@ func NewGicsClient(config config.AppConfig) *GicsClient {
 	return client
 }
 
-func (c *GicsClient) GetConsentStatus(signerId string, domain string, date string) (*fhir.Bundle, error) {
-	//template := fmt.Sprintf("%s;%s;%s", *t.DomainName, *t.Name, *t.Version)
+func (c *GicsHttpClient) GetConsentStatus(signerId string, domain string, date string) (*fhir.Bundle, error) {
 	date = strings.Fields(date)[0]
 
 	//default
@@ -92,7 +105,7 @@ func (c *GicsClient) GetConsentStatus(signerId string, domain string, date strin
 	return &bundle, nil
 }
 
-func (c *GicsClient) postRequest(body []byte) (*http.Response, error) {
+func (c *GicsHttpClient) postRequest(body []byte) (*http.Response, error) {
 	req, err := http.NewRequest(http.MethodPost, c.RequestUrl,
 		bytes.NewBuffer(body))
 	if err != nil {

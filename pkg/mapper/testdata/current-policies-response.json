@@ -1,0 +1,1319 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/8d9c2834-08de-4e2c-b099-a01985a9a3b7",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "8d9c2834-08de-4e2c-b099-a01985a9a3b7",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "IDAT_erheben",
+              "display": "Erfassung neuer identifizierender Daten (IDAT)"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "IDAT_erheben",
+                  "display": "Erfassung neuer identifizierender Daten (IDAT)"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.2",
+                  "display": "IDAT_erheben"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/00ad953a-9889-4846-97d0-26423a689e4e",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "00ad953a-9889-4846-97d0-26423a689e4e",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+              "code": "Rekontaktierung_Zusatzbefund",
+              "display": "Rekontaktierung bezüglich Zusatzbefund im Rahmen der am Standort dafür entwickelten Prozesse und der im Nutzungsantrag angegebenen Bedingungen"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+                  "code": "Rekontaktierung_Zusatzbefund",
+                  "display": "Rekontaktierung bezüglich Zusatzbefund im Rahmen der am Standort dafür entwickelten Prozesse und der im Nutzungsantrag angegebenen Bedingungen"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.31",
+                  "display": "Rekontaktierung_Zusatzbefund"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/97f45175-34e6-4355-b544-0e4f667e61f7",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "97f45175-34e6-4355-b544-0e4f667e61f7",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "MDAT_erheben",
+              "display": "Erfassung medizinischer Daten (MDAT)"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2028-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "MDAT_erheben",
+                  "display": "Erfassung medizinischer Daten (MDAT)"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.6",
+                  "display": "MDAT_erheben"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/84fbfde9-991a-4bc9-99c2-ff5560c32477",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "84fbfde9-991a-4bc9-99c2-ff5560c32477",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+              "code": "MDAT_wissenschaftlich_nutzen_EU_DSGVO_konform",
+              "display": "Bereitstellung umcodierter medizinischer Daten (MDAT) für wissenschaftliche Nutzung zu Zwecken med. Forschung an externe Forscher"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+                  "code": "MDAT_wissenschaftlich_nutzen_EU_DSGVO_konform",
+                  "display": "Bereitstellung umcodierter medizinischer Daten (MDAT) für wissenschaftliche Nutzung zu Zwecken med. Forschung an externe Forscher"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.8",
+                  "display": "MDAT_wissenschaftlich_nutzen_EU_DSGVO_NIVEAU"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/09f7f4f8-13f2-4f9a-b9bc-d7d2c110e261",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "09f7f4f8-13f2-4f9a-b9bc-d7d2c110e261",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "Rekontaktierung_Verknuepfung_Datenbanken",
+              "display": "Rekontaktierung zur Verknüpfung von Patientendaten mit Daten anderer Datenbanken"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "Rekontaktierung_Verknuepfung_Datenbanken",
+                  "display": "Rekontaktierung zur Verknüpfung von Patientendaten mit Daten anderer Datenbanken"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.27",
+                  "display": "Rekontaktierung_Verknuepfung_Datenbanken"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/13f740e3-6470-4d21-9b0a-ca778d1535d5",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "13f740e3-6470-4d21-9b0a-ca778d1535d5",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "Rekontaktierung_weitere_Studien",
+              "display": "Rekontaktierung bezüglich Information zu neuen Forschungsvorhaben oder Studien"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "Rekontaktierung_weitere_Studien",
+                  "display": "Rekontaktierung bezüglich Information zu neuen Forschungsvorhaben oder Studien"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.29",
+                  "display": "Rekontaktierung_weitere_Studien"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/0a9809af-3d7a-402a-a9d7-7374925db4da",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "0a9809af-3d7a-402a-a9d7-7374925db4da",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+              "code": "IDAT_bereitstellen_EU_DSGVO_konform",
+              "display": "Herausgabe identifizierender Daten (IDAT) an unabhängige Treuhandstelle zur weiteren Verarbeitung"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+                  "code": "IDAT_bereitstellen_EU_DSGVO_konform",
+                  "display": "Herausgabe identifizierender Daten (IDAT) an unabhängige Treuhandstelle zur weiteren Verarbeitung"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.5",
+                  "display": "IDAT_bereitstellen_EU_DSGVO_NIVEAU"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/70ba5ff3-b2db-40d2-8660-c6e9f0d555fb",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "70ba5ff3-b2db-40d2-8660-c6e9f0d555fb",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "IDAT_speichern_verarbeiten",
+              "display": "Speicherung und Verarbeitung identifizierender Daten (IDAT) zu Zwecken med. Forschung in der verantwortlichen Stelle"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "IDAT_speichern_verarbeiten",
+                  "display": "Speicherung und Verarbeitung identifizierender Daten (IDAT) zu Zwecken med. Forschung in der verantwortlichen Stelle"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.3",
+                  "display": "IDAT_speichern_verarbeiten"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/040d7caf-7eb8-487e-9466-0171158d6cd5",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "040d7caf-7eb8-487e-9466-0171158d6cd5",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "MDAT_speichern_verarbeiten",
+              "display": "Speicherung und Verarbeitung von medizinischen codierten Daten zu Zwecken med. Forschung innerhalb der verantwortlichen Stelle (MDAT)"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "MDAT_speichern_verarbeiten",
+                  "display": "Speicherung und Verarbeitung von medizinischen codierten Daten zu Zwecken med. Forschung innerhalb der verantwortlichen Stelle (MDAT)"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.7",
+                  "display": "MDAT_speichern_verarbeiten"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/f6aac724-b3a2-4e7f-8ee9-422750555d47",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "f6aac724-b3a2-4e7f-8ee9-422750555d47",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+              "code": "Rekontaktierung_Ergebnisse_erheblicher_Bedeutung",
+              "display": "Rekontaktierung des Betroffenen bei Ergebnissen von erheblicher Bedeutung"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy/MII",
+                  "code": "Rekontaktierung_Ergebnisse_erheblicher_Bedeutung",
+                  "display": "Rekontaktierung des Betroffenen bei Ergebnissen von erheblicher Bedeutung"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.37",
+                  "display": "Rekontaktierung_Ergebnisse_erheblicher_Bedeutung"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/fa02e912-eaac-4b20-a011-9cbe5a196471",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "fa02e912-eaac-4b20-a011-9cbe5a196471",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "Rekontaktierung_weitere_Erhebung",
+              "display": "Rekontaktierung bezüglich Erhebung zusätzlicher Daten"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "Rekontaktierung_weitere_Erhebung",
+                  "display": "Rekontaktierung bezüglich Erhebung zusätzlicher Daten"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.28",
+                  "display": "Rekontaktierung_weitere_Erhebung"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/dc46f819-7385-47e9-81e5-119b3ffd1415",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "dc46f819-7385-47e9-81e5-119b3ffd1415",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "IDAT_zusammenfuehren_Dritte",
+              "display": "Zusammenführung identifizierender Daten (IDAT) über die unabhängige Treuhandstelle mit Dritten Forschungspartnern, sofern dort eine Einwilligung vorliegt"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "IDAT_zusammenfuehren_Dritte",
+                  "display": "Zusammenführung identifizierender Daten (IDAT) über die unabhängige Treuhandstelle mit Dritten Forschungspartnern, sofern dort eine Einwilligung vorliegt"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.4",
+                  "display": "IDAT_zusammenfuehren_Dritte"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "http://umrgics-test.umr.rka.local/ttp-fhir/fhir/gics/Consent/20aadf52-40e9-466e-912e-8cb76be7d86e",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "20aadf52-40e9-466e-912e-8cb76be7d86e",
+        "meta": {
+          "lastUpdated": "2023-06-29T14:50:50.073+02:00",
+          "profile": [
+            "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+            "extension": [
+              {
+                "url": "domain",
+                "valueReference": {
+                  "reference": "ResearchStudy/6b7bb549-1826-4d62-bf25-00f5bd5043fd"
+                }
+              },
+              {
+                "url": "status",
+                "valueCoding": {
+                  "system": "http://hl7.org/fhir/publication-status",
+                  "code": "active"
+                }
+              }
+            ]
+          }
+        ],
+        "status": "active",
+        "scope": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+              "code": "research"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "57016-8"
+              }
+            ]
+          }
+        ],
+        "patient": {
+          "reference": "Patient/153b5457-aa61-4a9e-a6ee-3548d6fc28bb",
+          "display": "Patienten-ID 2"
+        },
+        "dateTime": "2023-06-29T00:00:00+02:00",
+        "organization": [
+          {
+            "display": "MII"
+          }
+        ],
+        "sourceReference": {
+          "reference": "QuestionnaireResponse/a731cb6e-e5ba-4ea8-a0f6-6ee2af5a4ecf"
+        },
+        "policyRule": {
+          "coding": [
+            {
+              "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+              "code": "MDAT_zusammenfuehren_Dritte",
+              "display": "Zusammenführung medizinischer Daten (MDAT) mit Dritten Forschungspartnern, sofern dort eine Einwilligung vorliegt"
+            }
+          ]
+        },
+        "provision": {
+          "type": "permit",
+          "period": {
+            "start": "2023-06-29T00:00:00+02:00",
+            "end": "2053-06-29T00:00:00+02:00"
+          },
+          "code": [
+            {
+              "coding": [
+                {
+                  "system": "https://ths-greifswald.de/fhir/CodeSystem/gics/Policy",
+                  "code": "MDAT_zusammenfuehren_Dritte",
+                  "display": "Zusammenführung medizinischer Daten (MDAT) mit Dritten Forschungspartnern, sofern dort eine Einwilligung vorliegt"
+                }
+              ]
+            },
+            {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                  "code": "2.16.840.1.113883.3.1937.777.24.5.3.9",
+                  "display": "MDAT_zusammenfuehren_Dritte"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
