@@ -48,10 +48,9 @@ func (c *TestGicsClient) Auth() *config.Auth {
 	return nil
 }
 
-func (c *TestGicsClient) GetConsentStatus(signerId string, domain string, date string) (*fhir.Bundle, error) {
+func (c *TestGicsClient) GetConsentStatus(_, _, _ string) (*fhir.Bundle, error) {
 	testFile, _ := os.Open("testdata/current-policies-response.json")
 	b, _ := io.ReadAll(testFile)
-
 	bundle, err := fhir.UnmarshalBundle(b)
 
 	return &bundle, err

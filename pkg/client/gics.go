@@ -12,7 +12,7 @@ import (
 )
 
 type GicsClient interface {
-	GetConsentStatus(signerId string, domain string, date string) (*fhir.Bundle, error)
+	GetConsentStatus(signerId, domain, date string) (*fhir.Bundle, error)
 	GetRequestUrl() string
 	GetAuth() *config.Auth
 }
@@ -45,7 +45,7 @@ func NewGicsClient(config config.AppConfig) *GicsHttpClient {
 	return client
 }
 
-func (c *GicsHttpClient) GetConsentStatus(signerId string, domain string, date string) (*fhir.Bundle, error) {
+func (c *GicsHttpClient) GetConsentStatus(signerId, domain, date string) (*fhir.Bundle, error) {
 	date = strings.Fields(date)[0]
 
 	//default
