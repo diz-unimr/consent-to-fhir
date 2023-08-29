@@ -1,4 +1,4 @@
-FROM golang:1.19.3-alpine3.16 AS build
+FROM golang:1.20.4-alpine3.16 AS build
 
 RUN set -ex && \
     apk add --no-progress --no-cache \
@@ -13,7 +13,7 @@ COPY . .
 RUN go get -d -v
 RUN GOOS=linux GOARCH=amd64 go build -v -tags musl
 
-FROM alpine:3.16 as run
+FROM alpine:3.18 as run
 
 WORKDIR /app/
 COPY --from=build /app/consent-to-fhir .
