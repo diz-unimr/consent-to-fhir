@@ -1,37 +1,52 @@
 package mapper
 
 import (
-	"github.com/magiconair/properties/assert"
+	"github.com/samply/golang-fhir-models/fhir-models/fhir"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 type TestCase struct {
 	name     string
-	profile  *ConsentProfile
-	template string
-	expected *ConsentPolicy
+	profile  string
+	category []fhir.CodeableConcept
+	policy   []fhir.ConsentPolicy
 }
 
 func TestGetPolicy(t *testing.T) {
+	miiPolicy := []fhir.ConsentPolicy{
+		{
+			// Patienteneinwilligung MII|1.6.d
+			Uri: Of("urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"),
+		},
+	}
+	miiCat := []fhir.CodeableConcept{
+		{
+			Coding: []fhir.Coding{{System: Of("http://loinc.org"), Code: Of("57016-8")}},
+		},
+		{
+			Coding: []fhir.Coding{{
+				System: Of("https://www.medizininformatik-initiative.de/fhir/modul-consent/CodeSystem/mii-cs-consent-consent_category"),
+				Code:   Of("2.16.840.1.113883.3.1937.777.24.2.184")}},
+		},
+	}
 
-	mii := NewConsentProfile(MiiProfile)
 	cases := []TestCase{
-		{"consentTemplate", mii, "Patienteneinwilligung MII|1.6.d", mii.ConsentPolicy},
-		{"withdrawalTemplate", mii, "Teilwiderruf (kompatibel zu Patienteneinwilligung MII 1.6d)|2.0.a", mii.ConsentPolicy},
-		{"completeWithdrawalTemplate", mii, "Vollständiger Widerruf (kompatibel zu Patienteneinwilligung MII 1.6d)", mii.ConsentPolicy},
-		{"garbledWithdrawalTemplate", mii, "Vollst�ndiger Widerruf (kompatibel zu Patienteneinwilligung MII 1.6d)", mii.ConsentPolicy},
-		{"invalidWithdrawalTemplate", mii, "Patienteneinwilligung Projekt 42|1.0", nil},
+		{"miiProfile", MiiProfile, miiCat, miiPolicy},
+		{"defaultProfile", "http://fhir.de/ConsentManagement/StructureDefinition/Consent", nil, nil},
 	}
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			runGetPolicy(t, c)
+			runMapProfile(t, c)
 		})
 	}
 }
 
-func runGetPolicy(t *testing.T, data TestCase) {
-	actual := data.profile.GetPolicy(data.template)
+func runMapProfile(t *testing.T, expected TestCase) {
+	c := fhir.Consent{Meta: &fhir.Meta{Profile: []string{expected.profile}}}
+	actual := MapProfile(c)
 
-	assert.Equal(t, actual, data.expected)
+	assert.Equal(t, expected.category, actual.Category)
+	assert.Equal(t, expected.policy, actual.Policy)
 }

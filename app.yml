@@ -5,6 +5,8 @@ app:
     consent-system: https://fhir.diz.uni-marburg.de/sid/consent-id
     patient-system: https://fhir.diz.uni-marburg.de/sid/patient-id
     domain-system: https://fhir.diz.uni-marburg.de/fhir/sid/consent-domain-id
+    profiles:
+      - MII: https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung
 
 kafka:
   bootstrap-servers: localhost:9092
@@ -19,7 +21,6 @@ kafka:
   num-consumers: 1
 
 gics:
-  signer-id: "Patienten-ID"
   fhir:
     base:
     auth:

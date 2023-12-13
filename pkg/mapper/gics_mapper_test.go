@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"consent-to-fhir/pkg/config"
+	"consent-to-fhir/pkg/model"
 	"fmt"
 	"github.com/magiconair/properties/assert"
 	"github.com/samply/golang-fhir-models/fhir-models/fhir"
@@ -27,7 +28,6 @@ func TestNewGicsMapper(t *testing.T) {
 	assert.Equal(t, m.Client.GetRequestUrl(), "base/$currentPolicyStatesForPerson")
 	assert.Equal(t, m.Client.GetAuth(), c.Gics.Fhir.Auth)
 	assert.Equal(t, m.Config, c.App.Mapper)
-	assert.Equal(t, m.ConsentProfile, NewConsentProfile(MiiProfile))
 }
 
 type TestGicsClient struct{}
@@ -48,7 +48,7 @@ func (c *TestGicsClient) Auth() *config.Auth {
 	return nil
 }
 
-func (c *TestGicsClient) GetConsentStatus(_, _, _ string) (*fhir.Bundle, error) {
+func (c *TestGicsClient) GetConsentStatus(signerId model.SignerId, domain, date string) (*fhir.Bundle, error) {
 	testFile, _ := os.Open("testdata/current-policies-response.json")
 	b, _ := io.ReadAll(testFile)
 	bundle, err := fhir.UnmarshalBundle(b)
@@ -61,6 +61,9 @@ func TestProcess(t *testing.T) {
 		ConsentSystem: Of("https://fhir.diz.uni-marburg.de/sid/consent-id"),
 		PatientSystem: Of("https://fhir.diz.uni-marburg.de/sid/patient-id"),
 		DomainSystem:  Of("https://fhir.diz.uni-marburg.de/fhir/sid/consent-domain-id"),
+		Profiles: map[string]string{
+			"MII": "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung",
+		},
 	}}}
 
 	m := NewGicsMapper(c)
@@ -92,7 +95,12 @@ func TestProcess(t *testing.T) {
 		Patient: &fhir.Reference{
 			Reference: Of(fmt.Sprintf("Patient?identifier=%s|%s", *c.App.Mapper.PatientSystem, "42")),
 		},
-		Policy: []fhir.ConsentPolicy{{Uri: m.ConsentProfile.ConsentPolicy.Uri}},
+		Policy: []fhir.ConsentPolicy{
+			{
+				// Patienteneinwilligung MII|1.6.d
+				Uri: Of("urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"),
+			},
+		},
 	}
 	bundle := m.Process(input)
 	actual, _ := fhir.UnmarshalConsent(bundle.Entry[0].Resource)

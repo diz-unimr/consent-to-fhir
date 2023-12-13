@@ -3,6 +3,7 @@ package client
 import (
 	"bytes"
 	"consent-to-fhir/pkg/config"
+	"consent-to-fhir/pkg/model"
 	"errors"
 	"github.com/samply/golang-fhir-models/fhir-models/fhir"
 	log "github.com/sirupsen/logrus"
@@ -12,7 +13,7 @@ import (
 )
 
 type GicsClient interface {
-	GetConsentStatus(signerId, domain, date string) (*fhir.Bundle, error)
+	GetConsentStatus(signerId model.SignerId, domain, date string) (*fhir.Bundle, error)
 	GetRequestUrl() string
 	GetAuth() *config.Auth
 }
@@ -21,7 +22,6 @@ type GicsHttpClient struct {
 	Auth             *config.Auth
 	IdentifierSystem string
 	RequestUrl       string
-	TargetProfile    string
 }
 
 func (c *GicsHttpClient) GetRequestUrl() string {
@@ -35,8 +35,7 @@ func (c *GicsHttpClient) GetAuth() *config.Auth {
 func NewGicsClient(config config.AppConfig) *GicsHttpClient {
 	client := &GicsHttpClient{
 		RequestUrl:       config.Gics.Fhir.Base + "/$currentPolicyStatesForPerson",
-		IdentifierSystem: "https://ths-greifswald.de/fhir/gics/identifiers/" + config.Gics.SignerId,
-		TargetProfile:    "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung",
+		IdentifierSystem: "https://ths-greifswald.de/fhir/gics/identifiers/",
 	}
 	if config.Gics.Fhir.Auth != nil {
 		client.Auth = config.Gics.Fhir.Auth
@@ -45,8 +44,10 @@ func NewGicsClient(config config.AppConfig) *GicsHttpClient {
 	return client
 }
 
-func (c *GicsHttpClient) GetConsentStatus(signerId, domain, date string) (*fhir.Bundle, error) {
+func (c *GicsHttpClient) GetConsentStatus(signerId model.SignerId, domain, date string) (*fhir.Bundle, error) {
 	date = strings.Fields(date)[0]
+
+	idSystem := c.IdentifierSystem + signerId.IdType
 
 	//default
 	ignoreVersionNumber := false
@@ -57,7 +58,7 @@ func (c *GicsHttpClient) GetConsentStatus(signerId, domain, date string) (*fhir.
 		Parameter: []fhir.ParametersParameter{
 			{
 				Name:            "personIdentifier",
-				ValueIdentifier: &fhir.Identifier{System: &c.IdentifierSystem, Value: &signerId},
+				ValueIdentifier: &fhir.Identifier{System: &idSystem, Value: &signerId.Id},
 			},
 			{
 				Name:        "domain",
