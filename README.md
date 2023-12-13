@@ -7,7 +7,7 @@ and send the mapped FHIR Consent resources to an output topic.
 
 The mapper currently relies on gICS itself to do the FHIR mapping and only harmonizes resources 
 references and identifiers as well as profile specific data.
-It currently supports the MII Consent module profile, only. 
+It currently supports the MII FHIR Consent profile, only. 
 
 Mapping directly from notification data might be implemented in the future.
 
@@ -25,7 +25,7 @@ giCS supports mapping consent data to FHIR via the [TTP-FHIR Gateway](https://ww
 
 The `consent-to-fhir` mapper uses the [$currentPolicyStatesForPerson](https://www.ths-greifswald.de/wp-content/uploads/tools/fhirgw/ig/2023-1-0/ImplementationGuide-markdown-Einwilligungsmanagement-Operations-currentPolicyStatesForPerson.html) 
 operation to get current policy states according to the input notification data.
-This data is then mapped to the MII FHIR Consent profile and references and identifiers are set to local systems.  
+This data is then mapped to supported FHIR Consent profiles (like the MII Broad Consent) and references and identifiers are set to local systems.  
 
 ### Supported consents and profiles
 
@@ -33,26 +33,26 @@ Currently, only the MII Broad consent (version 1.6.d) and the FHIR Consent modul
 
 ## Configuration properties
 
-| Name                             | Default                                                    | Description                                 |
-|----------------------------------|------------------------------------------------------------|---------------------------------------------|
-| `app.name`                       | consent-to-fhir                                            | Application name                            |
-| `app.log-level`                  | info                                                       | Log level (error,warn,info,debug,trace)     |
-| `app.mapper.consent-system`      | https://fhir.diz.uni-marburg.de/sid/consent-id             | Consent FHIR identifier system              |
-| `app.mapper.patient-system`      | https://fhir.diz.uni-marburg.de/sid/patient-id             | Patient FHIR identifier system              |
-| `app.mapper.domain-system`       | https://fhir.diz.uni-marburg.de/fhir/sid/consent-domain-id | Consent domain FHIR identifier system       |
-| `kafka.bootstrap-servers`        | localhost:9092                                             | Kafka brokers                               |
-| `kafka.security-protocol`        | ssl                                                        | Kafka communication protocol                |
-| `kafka.ssl.ca-location`          | /app/cert/kafka-ca.pem                                     | Kafka CA certificate location               |
-| `kafka.ssl.certificate-location` | /app/cert/app-cert.pem                                     | Client certificate location                 |
-| `kafka.ssl.key-location`         | /app/cert/app-key.pem                                      | Client key location                         |
-| `kafka.ssl.key-password`         | private-key-password                                       | Client key password                         |
-| `kafka.input-topic`              |                                                            | Notification input topic                    |
-| `kafka.output-topic`             |                                                            | Consent FHIR output topic                   |
-| `kafka.num-consumers`            | 1                                                          | Number of concurrent Kafka consumer threads |
-| `gics.signer-id`                 | Patienten-ID                                               | Target consent signerId                     |
-| `gics.fhir.base`                 |                                                            | TTP-FHIR base url                           |
-| `gics.fhir.auth.user`            |                                                            | TTP-FHIR Basic auth user                    |
-| `gics.fhir.auth.password`        |                                                            | TTP-FHIR Basic auth password                |
+| Name                             | Default                                                                                                               | Description                                 |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------|---------------------------------------------|
+| `app.name`                       | consent-to-fhir                                                                                                       | Application name                            |
+| `app.log-level`                  | info                                                                                                                  | Log level (error,warn,info,debug,trace)     |
+| `app.mapper.consent-system`      | https://fhir.diz.uni-marburg.de/sid/consent-id                                                                        | Consent FHIR identifier system              |
+| `app.mapper.patient-system`      | https://fhir.diz.uni-marburg.de/sid/patient-id                                                                        | Patient FHIR identifier system              |
+| `app.mapper.domain-system`       | https://fhir.diz.uni-marburg.de/fhir/sid/consent-domain-id                                                            | Consent domain FHIR identifier system       |
+| `app.mapper.profiles`            | - MII: https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung | Consent FHIR profiles to match for mapping  |
+| `kafka.bootstrap-servers`        | localhost:9092                                                                                                        | Kafka brokers                               |
+| `kafka.security-protocol`        | ssl                                                                                                                   | Kafka communication protocol                |
+| `kafka.ssl.ca-location`          | /app/cert/kafka-ca.pem                                                                                                | Kafka CA certificate location               |
+| `kafka.ssl.certificate-location` | /app/cert/app-cert.pem                                                                                                | Client certificate location                 |
+| `kafka.ssl.key-location`         | /app/cert/app-key.pem                                                                                                 | Client key location                         |
+| `kafka.ssl.key-password`         | private-key-password                                                                                                  | Client key password                         |
+| `kafka.input-topic`              |                                                                                                                       | Notification input topic                    |
+| `kafka.output-topic`             |                                                                                                                       | Consent FHIR output topic                   |
+| `kafka.num-consumers`            | 1                                                                                                                     | Number of concurrent Kafka consumer threads |
+| `gics.fhir.base`                 |                                                                                                                       | TTP-FHIR base url                           |
+| `gics.fhir.auth.user`            |                                                                                                                       | TTP-FHIR Basic auth user                    |
+| `gics.fhir.auth.password`        |                                                                                                                       | TTP-FHIR Basic auth password                |
 
 
 ### Environment variables
@@ -73,9 +73,8 @@ consent-to-fhir:
       APP_LOG_LEVEL: info
       KAFKA_BOOTSTRAP_SERVERS: kafka:19092
       KAFKA_SECURITY_PROTOCOL: SSL
-      KAFKA_INPUT_TOPIC: consent-json-idat
-      KAFKA_OUTPUT_TOPIC: consent-fhir-idat
-      GICS_SIGNER_ID: Patienten-ID
+      KAFKA_INPUT_TOPIC: consent-json
+      KAFKA_OUTPUT_TOPIC: consent-fhir
       GICS_FHIR_BASE: https://gics.local/ttp-fhir/fhir/gics/
       GICS_FHIR_AUTH_USER: test
       GICS_FHIR_AUTH_PASSWORD: test
