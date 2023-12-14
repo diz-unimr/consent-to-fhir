@@ -58,15 +58,10 @@ func (m *GicsMapper) toFhir(n model.Notification) (*fhir.Bundle, error) {
 	}
 
 	// map resources
-	policyName := fmt.Sprintf(
-		"%s|%s",
-		*n.ConsentKey.ConsentTemplateKey.Name,
-		*n.ConsentKey.ConsentTemplateKey.Version,
-	)
-	return m.mapResources(bundle, n.ConsentKey.ConsentTemplateKey.DomainName, signerId.Id, policyName)
+	return m.mapResources(bundle, n.ConsentKey.ConsentTemplateKey.DomainName, signerId.Id)
 }
 
-func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid string, policyName string) (*fhir.Bundle, error) {
+func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid string) (*fhir.Bundle, error) {
 
 	// check bundle
 	if len(bundle.Entry) == 0 {
@@ -77,12 +72,12 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid strin
 	c, _ := fhir.UnmarshalConsent(bundle.Entry[0].Resource)
 	c.Provision = &fhir.ConsentProvision{
 		Type:      Of(fhir.ConsentProvisionTypeDeny),
-		Period:    c.Provision.Period,
+		Period:    fixNoExpiryDate(c.Provision.Period),
 		Provision: mergePolicies(bundle.Entry),
 	}
 
 	// map
-	r := m.mapConsent(c, domain, pid, policyName)
+	r := m.mapConsent(c, domain, pid)
 	data, err := r.MarshalJSON()
 	if err != nil {
 		return nil, err
@@ -100,7 +95,7 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid strin
 				}}}}, nil
 }
 
-func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, policyName string) fhir.Consent {
+func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string) fhir.Consent {
 	// set id
 	id := hash(*domain, pid)
 	c.Id = &id
@@ -153,12 +148,7 @@ func mergePolicies(entries []fhir.BundleEntry) []fhir.ConsentProvision {
 			}
 
 			// fix 'no end date' of provision period
-			noExpiryDate := time.Date(3000, 1, 1, 0, 0, 0, 0, time.Local)
-			if pp.Period != nil && pp.Period.End != nil {
-				if pEnd := parseTime(pp.Period.End); pEnd != nil && *pEnd == noExpiryDate {
-					pp.Period.End = nil
-				}
-			}
+			pp.Period = fixNoExpiryDate(pp.Period)
 
 			// pick single coding from provision.code
 			coding := getSingleCoding(pp.Code)
@@ -173,6 +163,18 @@ func mergePolicies(entries []fhir.BundleEntry) []fhir.ConsentProvision {
 	}
 
 	return p
+}
+
+func fixNoExpiryDate(period *fhir.Period) *fhir.Period {
+	if period != nil && period.End != nil {
+		if pEnd := parseTime(period.End); pEnd != nil && *pEnd == time.Date(3000, 1, 1, 0, 0, 0, 0, time.Local) {
+			return &fhir.Period{
+				Start: period.Start,
+				End:   nil,
+			}
+		}
+	}
+	return period
 }
 
 func getSingleCoding(codes []fhir.CodeableConcept) *fhir.Coding {
