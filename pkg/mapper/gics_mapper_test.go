@@ -165,19 +165,19 @@ func TestMergePolicies(t *testing.T) {
 func TestMergePolicies_NoExpiry(t *testing.T) {
 
 	cases := []struct {
-		name      string
-		period    fhir.Period
-		periodEnd *string
+		name     string
+		period   fhir.Period
+		expected fhir.Period
 	}{
 		{
-			name:      "ok",
-			period:    fhir.Period{Start: Of("2023-12-11T00:00:00+01:00"), End: Of("2053-12-11T00:00:00+01:00")},
-			periodEnd: Of("2053-12-11T00:00:00+01:00"),
+			name:     "ok",
+			period:   fhir.Period{Start: Of("2023-12-11T00:00:00+01:00"), End: Of("2053-12-11T00:00:00+01:00")},
+			expected: fhir.Period{Start: Of("2023-12-11T00:00:00+01:00"), End: Of("2053-12-11T00:00:00+01:00")},
 		},
 		{
-			name:      "fix",
-			period:    fhir.Period{Start: Of("2023-12-11T00:00:00+01:00"), End: Of("3000-01-01T00:00:00+01:00")},
-			periodEnd: nil,
+			name:     "fix",
+			period:   fhir.Period{Start: Of("2023-12-11T00:00:00+01:00"), End: Of("3000-01-01T00:00:00+01:00")},
+			expected: fhir.Period{Start: Of("2023-12-11T00:00:00+01:00"), End: nil},
 		},
 	}
 
@@ -186,8 +186,7 @@ func TestMergePolicies_NoExpiry(t *testing.T) {
 
 			actual := fixNoExpiryDate(&c.period)
 
-			assert.Equal(t, *actual.Start, *c.period.Start)
-			assert.Equal(t, actual.End, (*string)(c.periodEnd))
+			assert.Equal(t, *actual, c.expected)
 		})
 	}
 }
