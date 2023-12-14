@@ -167,7 +167,10 @@ func mergePolicies(entries []fhir.BundleEntry) []fhir.ConsentProvision {
 
 func fixNoExpiryDate(period *fhir.Period) *fhir.Period {
 	if period != nil && period.End != nil {
-		if pEnd := parseTime(period.End); pEnd != nil && *pEnd == time.Date(3000, 1, 1, 0, 0, 0, 0, time.Local) {
+		end := parseTime(period.End)
+		noExpiry := time.Date(3000, 1, 1, 0, 0, 0, 0, time.FixedZone(end.Zone()))
+
+		if noExpiry.Equal(*end) {
 			return &fhir.Period{
 				Start: period.Start,
 				End:   nil,
