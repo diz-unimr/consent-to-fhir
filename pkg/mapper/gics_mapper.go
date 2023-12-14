@@ -10,21 +10,19 @@ import (
 	"fmt"
 	"github.com/samply/golang-fhir-models/fhir-models/fhir"
 	log "github.com/sirupsen/logrus"
-	"strings"
+	"time"
 )
 
 type GicsMapper struct {
-	Client         client.GicsClient
-	Config         config.Mapper
-	ConsentProfile *ConsentProfile
+	Client client.GicsClient
+	Config config.Mapper
 }
 
 func NewGicsMapper(c config.AppConfig) *GicsMapper {
 
 	return &GicsMapper{
-		Client:         client.NewGicsClient(c),
-		Config:         c.App.Mapper,
-		ConsentProfile: NewConsentProfile(MiiProfile),
+		Client: client.NewGicsClient(c),
+		Config: c.App.Mapper,
 	}
 }
 
@@ -50,7 +48,7 @@ func (m *GicsMapper) toFhir(n model.Notification) (*fhir.Bundle, error) {
 	// get current consent state from gics
 	signerId := n.ConsentKey.SignerIds[0]
 	bundle, err := m.Client.GetConsentStatus(
-		signerId.Id,
+		signerId,
 		*n.ConsentKey.ConsentTemplateKey.DomainName,
 		*n.ConsentKey.ConsentDate,
 	)
@@ -60,15 +58,10 @@ func (m *GicsMapper) toFhir(n model.Notification) (*fhir.Bundle, error) {
 	}
 
 	// map resources
-	policyName := fmt.Sprintf(
-		"%s|%s",
-		*n.ConsentKey.ConsentTemplateKey.Name,
-		*n.ConsentKey.ConsentTemplateKey.Version,
-	)
-	return m.mapResources(bundle, n.ConsentKey.ConsentTemplateKey.DomainName, signerId.Id, policyName)
+	return m.mapResources(bundle, n.ConsentKey.ConsentTemplateKey.DomainName, signerId.Id)
 }
 
-func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid string, policyName string) (*fhir.Bundle, error) {
+func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid string) (*fhir.Bundle, error) {
 
 	// check bundle
 	if len(bundle.Entry) == 0 {
@@ -79,12 +72,12 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid strin
 	c, _ := fhir.UnmarshalConsent(bundle.Entry[0].Resource)
 	c.Provision = &fhir.ConsentProvision{
 		Type:      Of(fhir.ConsentProvisionTypeDeny),
-		Period:    c.Provision.Period,
+		Period:    fixNoExpiryDate(c.Provision.Period),
 		Provision: mergePolicies(bundle.Entry),
 	}
 
 	// map
-	r := m.mapConsent(c, domain, pid, policyName)
+	r := m.mapConsent(c, domain, pid)
 	data, err := r.MarshalJSON()
 	if err != nil {
 		return nil, err
@@ -102,16 +95,18 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid strin
 				}}}}, nil
 }
 
-func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, policyName string) fhir.Consent {
+func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string) fhir.Consent {
 	// set id
 	id := hash(*domain, pid)
 	c.Id = &id
 
-	// set profile
-	c.Meta.Profile = []string{MiiProfile}
+	// set profile and do custom mapping
+	if p, ok := m.Config.Profiles[*domain]; ok {
+		c.Meta.Profile = []string{p}
 
-	// map category
-	c.Category = m.ConsentProfile.Category
+		// map to profile
+		c = MapProfile(c)
+	}
 
 	// set identifier
 	c.Identifier = []fhir.Identifier{{
@@ -119,9 +114,6 @@ func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string, poli
 		Value:  &id,
 	}}
 
-	// consent policy
-	policy := m.ConsentProfile.GetPolicy(policyName)
-	c.Policy = []fhir.ConsentPolicy{{Uri: policy.Uri}}
 	// remove policyRule and source reference
 	c.PolicyRule = nil
 	c.SourceReference = nil
@@ -144,45 +136,60 @@ func mergePolicies(entries []fhir.BundleEntry) []fhir.ConsentProvision {
 	for _, e := range entries {
 		c, _ := fhir.UnmarshalConsent(e.Resource)
 
-		if *c.Provision.Type == fhir.ConsentProvisionTypeDeny {
-			// already denied by first level provision
-			continue
-		}
+		// provisions are nested
+		if prov := c.Provision; prov != nil && len(prov.Provision) > 0 {
 
-		// there is only a single mii code per provision
-		miiCode := getSingleMiiCode(c.Provision.Code)
-		if miiCode == nil {
-			log.WithError(errors.New("no MII coding found")).
-				Warn("Failed to map provision. Consent resource might be incomplete")
-			continue
-		}
+			// get first provision
+			pp := prov.Provision[0]
 
-		c.Provision.Code = []fhir.CodeableConcept{*miiCode}
-		p = append(p, *c.Provision)
+			if *pp.Type == fhir.ConsentProvisionTypeDeny || len(pp.Code) == 0 {
+				// provision already denied by first level provision or no code exists
+				continue
+			}
+
+			// fix 'no end date' of provision period
+			pp.Period = fixNoExpiryDate(pp.Period)
+
+			// pick single coding from provision.code
+			coding := getSingleCoding(pp.Code)
+			if coding == nil {
+				// no coding found
+				continue
+			}
+
+			pp.Code = []fhir.CodeableConcept{{Coding: []fhir.Coding{*coding}}}
+			p = append(p, pp)
+		}
 	}
 
 	return p
 }
 
-func getSingleMiiCode(codes []fhir.CodeableConcept) *fhir.CodeableConcept {
-	for _, c := range codes {
-		for _, coding := range c.Coding {
-			if coding.System != nil && *coding.System == MiiProvisionCode {
-				coding.Display = fixDisplay(coding.Display)
-				c.Coding = []fhir.Coding{coding}
-				return &c
+func fixNoExpiryDate(period *fhir.Period) *fhir.Period {
+	if period != nil && period.End != nil {
+		end := parseTime(period.End)
+		noExpiry := time.Date(3000, 1, 1, 0, 0, 0, 0, time.FixedZone(end.Zone()))
+
+		if noExpiry.Equal(*end) {
+			return &fhir.Period{
+				Start: period.Start,
+				End:   nil,
 			}
 		}
 	}
-	return nil
+	return period
 }
 
-func fixDisplay(display *string) *string {
-	if display != nil {
-		// replace underscores for correct display values
-		return Of(strings.Replace(*display, "_", " ", -1))
+func getSingleCoding(codes []fhir.CodeableConcept) *fhir.Coding {
+	// just pick the last coding of the first code as it is currently the most specific one by convention
+	// this might change in the future
+
+	coding := codes[0].Coding
+	if len(coding) > 0 {
+		return &coding[len(coding)-1]
 	}
-	return display
+
+	return nil
 }
 
 func (m *GicsMapper) setDomainExtension(extensions []fhir.Extension, domain *string) []fhir.Extension {
@@ -214,4 +221,13 @@ func hash(values ...string) string {
 	}
 	sum := h.Sum(nil)
 	return fmt.Sprintf("%x", sum)
+}
+
+func parseTime(dt *string) *time.Time {
+	t, err := time.Parse(time.RFC3339, *dt)
+	if err != nil {
+		log.WithError(errors.Join(err, errors.New("unable to parse time as RFC3339")))
+		return nil
+	}
+	return &t
 }

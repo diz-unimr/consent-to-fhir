@@ -1,63 +1,79 @@
 package config
 
 import (
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/env"
+	"github.com/knadh/koanf/providers/file"
+	"github.com/knadh/koanf/v2"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"os"
 	"strings"
 )
 
 type AppConfig struct {
-	App   App   `mapstructure:"app"`
-	Kafka Kafka `mapstructure:"kafka"`
-	Gics  Gics  `mapstructure:"gics"`
+	App   App   `koanf:"app"`
+	Kafka Kafka `koanf:"kafka"`
+	Gics  Gics  `koanf:"gics"`
 }
 
 type App struct {
-	Name     string `mapstructure:"name"`
-	LogLevel string `mapstructure:"log-level"`
-	Mapper   Mapper `mapstructure:"mapper"`
+	Name     string `koanf:"name"`
+	LogLevel string `koanf:"log-level"`
+	Mapper   Mapper `koanf:"mapper"`
 }
 
 type Mapper struct {
-	ConsentSystem *string `mapstructure:"consent-system"`
-	PatientSystem *string `mapstructure:"patient-system"`
-	DomainSystem  *string `mapstructure:"domain-system"`
+	ConsentSystem *string           `koanf:"consent-system"`
+	PatientSystem *string           `koanf:"patient-system"`
+	DomainSystem  *string           `koanf:"domain-system"`
+	Profiles      map[string]string `koanf:"profiles"`
 }
 
 type Kafka struct {
-	BootstrapServers string `mapstructure:"bootstrap-servers"`
-	InputTopic       string `mapstructure:"input-topic"`
-	OutputTopic      string `mapstructure:"output-topic"`
-	SecurityProtocol string `mapstructure:"security-protocol"`
-	Ssl              Ssl    `mapstructure:"ssl"`
-	NumConsumers     int    `mapstructure:"num-consumers"`
+	BootstrapServers string `koanf:"bootstrap-servers"`
+	InputTopic       string `koanf:"input-topic"`
+	OutputTopic      string `koanf:"output-topic"`
+	SecurityProtocol string `koanf:"security-protocol"`
+	Ssl              Ssl    `koanf:"ssl"`
+	NumConsumers     int    `koanf:"num-consumers"`
 }
 
 type Gics struct {
-	SignerId string `mapstructure:"signer-id"`
-	Fhir     Fhir   `mapstructure:"fhir"`
+	Fhir Fhir `koanf:"fhir"`
 }
 
 type Ssl struct {
-	CaLocation          string `mapstructure:"ca-location"`
-	CertificateLocation string `mapstructure:"certificate-location"`
-	KeyLocation         string `mapstructure:"key-location"`
-	KeyPassword         string `mapstructure:"key-password"`
+	CaLocation          string `koanf:"ca-location"`
+	CertificateLocation string `koanf:"certificate-location"`
+	KeyLocation         string `koanf:"key-location"`
+	KeyPassword         string `koanf:"key-password"`
 }
 
 type Fhir struct {
-	Base string `mapstructure:"base"`
-	Auth *Auth  `mapstructure:"auth"`
+	Base string `koanf:"base"`
+	Auth *Auth  `koanf:"auth"`
 }
 
 type Auth struct {
-	User     string `mapstructure:"user"`
-	Password string `mapstructure:"password"`
+	User     string `koanf:"user"`
+	Password string `koanf:"password"`
 }
 
 func LoadConfig() AppConfig {
-	c, err := parseConfig(".")
+
+	// load config file
+	var k = koanf.New(".")
+	f := file.Provider("app.yml")
+	if err := k.Load(f, yaml.Parser()); err != nil {
+		log.WithError(err).Fatal("Error loading config file")
+		os.Exit(1)
+	}
+	// replace env vars
+	_ = k.Load(env.Provider("", ".", func(s string) string {
+		return strings.NewReplacer(`.`, `_`, `-`, `_`).Replace(s)
+	}), nil)
+
+	c, err := parseConfig(k)
 	if err != nil {
 		log.WithError(err).Fatal("Unable to load config file")
 		os.Exit(1)
@@ -66,19 +82,9 @@ func LoadConfig() AppConfig {
 	return *c
 }
 
-func parseConfig(path string) (config *AppConfig, err error) {
-	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
-	viper.SetConfigType("yml")
-
-	viper.AutomaticEnv()
-	viper.SetEnvKeyReplacer(strings.NewReplacer(`.`, `_`, `-`, `_`))
-
-	err = viper.ReadInConfig()
-	if err != nil {
-		return nil, err
+func parseConfig(k *koanf.Koanf) (config *AppConfig, err error) {
+	if e := k.Unmarshal("", &config); err != nil {
+		return nil, e
 	}
-
-	err = viper.Unmarshal(&config)
 	return
 }
