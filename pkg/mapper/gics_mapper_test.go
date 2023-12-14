@@ -153,9 +153,7 @@ func TestMergePolicies(t *testing.T) {
 			var actual []fhir.Coding
 			for _, prov := range p {
 				for _, cc := range prov.Code {
-					for _, coding := range cc.Coding {
-						actual = append(actual, coding)
-					}
+					actual = append(actual, cc.Coding...)
 				}
 			}
 
