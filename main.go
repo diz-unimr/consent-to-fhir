@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	appConfig := config.LoadConfig()
+	appConfig := config.LoadConfig("app.yml")
 	configureLogger(appConfig.App)
 
 	p := kafka.NewProcessor(appConfig)
