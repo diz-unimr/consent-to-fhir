@@ -8,10 +8,14 @@ import (
 )
 
 func main() {
-	appConfig := config.LoadConfig("app.yml")
+	appConfig, err := config.LoadConfig("app.yml")
+	if err != nil {
+		log.WithError(err).Fatal("Error loading config file")
+		os.Exit(1)
+	}
 	configureLogger(appConfig.App)
 
-	p := kafka.NewProcessor(appConfig)
+	p := kafka.NewProcessor(*appConfig)
 	p.Run()
 }
 

@@ -5,8 +5,6 @@ import (
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/v2"
-	log "github.com/sirupsen/logrus"
-	"os"
 	"regexp"
 	"strings"
 )
@@ -60,27 +58,20 @@ type Auth struct {
 	Password string `koanf:"password"`
 }
 
-func LoadConfig(path string) AppConfig {
+func LoadConfig(path string) (*AppConfig, error) {
 
 	// load config file
 	var k = koanf.New(".")
 	f := file.Provider(path)
 	if err := k.Load(f, yaml.Parser()); err != nil {
-		log.WithError(err).Fatal("Error loading config file")
-		os.Exit(1)
+		return nil, err
 	}
 	// replace env vars
 	_ = k.Load(env.Provider("", ".", func(s string) string {
 		return parseEnv(k, s)
 	}), nil)
 
-	c, err := parseConfig(k)
-	if err != nil {
-		log.WithError(err).Fatal("Unable to load config file")
-		os.Exit(1)
-	}
-
-	return *c
+	return parseConfig(k), nil
 }
 
 func parseEnv(k *koanf.Koanf, s string) string {
@@ -95,9 +86,7 @@ func parseEnv(k *koanf.Koanf, s string) string {
 	return ""
 }
 
-func parseConfig(k *koanf.Koanf) (config *AppConfig, err error) {
-	if e := k.Unmarshal("", &config); err != nil {
-		return nil, e
-	}
-	return
+func parseConfig(k *koanf.Koanf) (config *AppConfig) {
+	_ = k.Unmarshal("", &config)
+	return config
 }

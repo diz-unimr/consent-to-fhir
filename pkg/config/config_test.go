@@ -56,7 +56,18 @@ func TestLoadConfig(t *testing.T) {
 	_, b, _, _ := runtime.Caller(0)
 	base := filepath.Join(filepath.Dir(b), "../..")
 
-	c := LoadConfig(base + "/app.yml")
+	c, _ := LoadConfig(base + "/app.yml")
 
 	assert.Equal(t, c.App.Name, "consent-to-fhir")
+}
+
+func TestLoadConfig_invalidPath(t *testing.T) {
+
+	_, b, _, _ := runtime.Caller(0)
+	base := filepath.Join(filepath.Dir(b), "../..")
+
+	c, err := LoadConfig(base + "/invalid.yml")
+
+	assert.Nil(t, c)
+	assert.Error(t, err)
 }
