@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 RUN go get -d -v && GOOS=linux GOARCH=amd64 go build -v -tags musl
 
-FROM alpine:3.18 as run
+FROM alpine:3.19 as run
 
 RUN apk add --no-progress --no-cache tzdata
 
