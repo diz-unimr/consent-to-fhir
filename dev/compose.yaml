@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   zoo:
-    image: zookeeper:3.9.1
+    image: zookeeper:3.9.2
     restart: unless-stopped
     ports:
       - "2181:2181"
