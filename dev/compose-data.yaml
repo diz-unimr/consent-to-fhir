@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   consent-data-loader:
-    image: confluentinc/cp-kafkacat:7.1.11
+    image: confluentinc/cp-kafkacat:7.1.12
     entrypoint: ["/bin/bash", "-c"]
     command: >
       "kafkacat -b localhost:9092 -K: -t consent-json -P -l /data/consent-data.ndjson"

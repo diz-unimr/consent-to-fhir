@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   zoo:
-    image: zookeeper:3.9.1
+    image: zookeeper:3.9.2
     restart: unless-stopped
     ports:
       - "2181:2181"
@@ -13,7 +13,7 @@ services:
       ZOO_SERVERS: server.1=zoo:2888:3888;2181
 
   kafka:
-    image: confluentinc/cp-kafka:7.6.0
+    image: confluentinc/cp-kafka:7.6.1
     ports:
       - "9092:9092"
       - "9093:9093"
@@ -32,7 +32,7 @@ services:
       - zoo
 
   akhq:
-    image: tchiotludo/akhq:0.24.0
+    image: tchiotludo/akhq:0.25.0
     environment:
       AKHQ_CONFIGURATION: |
         akhq:
