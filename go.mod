@@ -1,8 +1,6 @@
 module consent-to-fhir
 
-go 1.21
-
-toolchain go1.22.4
+go 1.22
 
 require (
 	github.com/confluentinc/confluent-kafka-go/v2 v2.4.0
@@ -21,7 +19,6 @@ require (
 	github.com/go-viper/mapstructure/v2 v2.0.0-alpha.1 // indirect
 	github.com/knadh/koanf/maps v0.1.1 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
-	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect

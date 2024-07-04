@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine3.20 AS build
+FROM golang:1.22-alpine3.20 AS build
 
 RUN set -ex && \
     apk add --no-progress --no-cache \
