@@ -36,7 +36,9 @@ func TestNewGicsMapper(t *testing.T) {
 	assert.Equal(t, m.Config, c.App.Mapper)
 }
 
-type TestGicsClient struct{}
+type TestGicsClient struct {
+	respFilePath string
+}
 
 func (c *TestGicsClient) GetRequestUrl() string {
 	return ""
@@ -55,14 +57,14 @@ func (c *TestGicsClient) Auth() *config.Auth {
 }
 
 func (c *TestGicsClient) GetConsentStatus(_ model.SignerId, _, _ string) (*fhir.Bundle, error) {
-	testFile, _ := os.Open("testdata/current-policies-response.json")
+	testFile, _ := os.Open(c.respFilePath)
 	b, _ := io.ReadAll(testFile)
 	bundle, err := fhir.UnmarshalBundle(b)
 
 	return &bundle, err
 }
 
-func TestProcess(t *testing.T) {
+func createTestMapper() *GicsMapper {
 	c := config.AppConfig{App: config.App{Mapper: config.Mapper{
 		ConsentSystem: Of("https://fhir.diz.uni-marburg.de/sid/consent-id"),
 		PatientSystem: Of("https://fhir.diz.uni-marburg.de/sid/patient-id"),
@@ -72,8 +74,15 @@ func TestProcess(t *testing.T) {
 		},
 	}}}
 
-	m := NewGicsMapper(c)
-	m.Client = &TestGicsClient{}
+	return NewGicsMapper(c)
+}
+
+func TestProcess(t *testing.T) {
+	m := createTestMapper()
+
+	m.Client = &TestGicsClient{
+		respFilePath: "testdata/current-policies-response.json",
+	}
 	input := []byte(`
 		{
 		  "consentKey": {
@@ -99,7 +108,7 @@ func TestProcess(t *testing.T) {
 			Profile: []string{MiiProfile},
 		},
 		Patient: &fhir.Reference{
-			Reference: Of(fmt.Sprintf("Patient?identifier=%s|%s", *c.App.Mapper.PatientSystem, "42")),
+			Reference: Of(fmt.Sprintf("Patient?identifier=%s|%s", *m.Config.PatientSystem, "42")),
 		},
 		Policy: []fhir.ConsentPolicy{
 			{
@@ -114,6 +123,45 @@ func TestProcess(t *testing.T) {
 	assert.Equal(t, actual.Meta.Profile, expected.Meta.Profile)
 	assert.Equal(t, *actual.Patient.Reference, *expected.Patient.Reference)
 	assert.Equal(t, actual.Policy, expected.Policy)
+}
+
+func TestProcess_MissingConsent(t *testing.T) {
+	m := createTestMapper()
+	m.Client = &TestGicsClient{
+		respFilePath: "testdata/empty-policies-response.json",
+	}
+
+	input := []byte(`
+		{
+		  "consentKey": {
+			"consentTemplateKey": {
+			  "domainName": "MII",
+			  "name": "Patienteneinwilligung MII",
+			  "version": "1.6.d"
+			},
+			"signerIds": [
+			  {
+				"idType": "Patienten-ID",
+				"id": "42",
+				"orderNumber": 0
+			  }
+			],
+			"consentDate": "2023-05-02 01:57:27"
+		  }
+		}
+	`)
+
+	condId := hash("MII", "42")
+
+	expected := fhir.BundleEntryRequest{
+		Method: fhir.HTTPVerbDELETE,
+		Url:    fmt.Sprintf("Consent?identifier=%s|%s", *m.Config.ConsentSystem, condId),
+	}
+
+	bundle := *m.Process(input)
+	actual := *bundle.Entry[0].Request
+
+	assert.Equal(t, actual, expected)
 }
 
 func TestMergePolicies(t *testing.T) {
