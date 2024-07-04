@@ -36,6 +36,9 @@ services:
     environment:
       AKHQ_CONFIGURATION: |
         akhq:
+          ui-options:
+            topic.show-all-consumer-groups: true
+            topic-data.sort: NEWEST
           connections:
             docker-kafka-server:
               properties:
@@ -44,3 +47,28 @@ services:
       - "9000:8080"
     depends_on:
       - kafka
+
+  mysql:
+    image: mysql:8
+    container_name: gics-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Europe/Berlin
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sqls:/docker-entrypoint-initdb.d
+    command: --max_allowed_packet=20M --default-time-zone=Europe/Berlin
+
+  gics:
+    image: registry.diz.uni-marburg.de/ths/gics:2023.1.3
+    container_name: gics-wildfly
+    restart: unless-stopped
+    ports:
+      - "8090:8080"
+      - "127.0.0.1:9992:9990"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - mysql

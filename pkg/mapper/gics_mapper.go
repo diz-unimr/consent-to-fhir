@@ -45,8 +45,10 @@ func (m *GicsMapper) Process(data []byte) *fhir.Bundle {
 
 func (m *GicsMapper) toFhir(n model.Notification) (*fhir.Bundle, error) {
 
-	// get current consent state from gics
 	signerId := n.ConsentKey.SignerIds[0]
+	domain := *n.ConsentKey.ConsentTemplateKey.DomainName
+
+	// get current consent state from gics
 	bundle, err := m.Client.GetConsentStatus(
 		signerId,
 		*n.ConsentKey.ConsentTemplateKey.DomainName,
@@ -58,14 +60,34 @@ func (m *GicsMapper) toFhir(n model.Notification) (*fhir.Bundle, error) {
 	}
 
 	// map resources
-	return m.mapResources(bundle, n.ConsentKey.ConsentTemplateKey.DomainName, signerId.Id)
+	return m.mapResources(bundle, domain, signerId.Id)
 }
 
-func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid string) (*fhir.Bundle, error) {
+func (m *GicsMapper) createDeleteBundle(domain, signerId string) (*fhir.Bundle, error) {
+	id := hash(domain, signerId)
+
+	// build Bundle
+	return &fhir.Bundle{
+		Type: fhir.BundleTypeTransaction,
+		Entry: []fhir.BundleEntry{
+			{
+				Request: &fhir.BundleEntryRequest{
+					Method: fhir.HTTPVerbDELETE,
+					Url:    fmt.Sprintf("Consent?identifier=%s|%s", *m.Config.ConsentSystem, id),
+				}}}}, nil
+}
+
+func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain string, pid string) (*fhir.Bundle, error) {
 
 	// check bundle
 	if len(bundle.Entry) == 0 {
-		return nil, errors.New("no Consent resource found in gICS FHIR bundle")
+
+		// no consent resources found indicates invalidation (or inconsistent data)
+		log.WithField("id", pid).Warn("No Consent resource found in gICS FHIR bundle. "+
+			"Consent may have been invalidated. Creating delete request", "id", pid)
+
+		// return delete request
+		return m.createDeleteBundle(domain, pid)
 	}
 
 	// prepare consent resource & merge policies
@@ -95,13 +117,13 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain *string, pid strin
 				}}}}, nil
 }
 
-func (m *GicsMapper) mapConsent(c fhir.Consent, domain *string, pid string) fhir.Consent {
+func (m *GicsMapper) mapConsent(c fhir.Consent, domain string, pid string) fhir.Consent {
 	// set id
-	id := hash(*domain, pid)
+	id := hash(domain, pid)
 	c.Id = &id
 
 	// set profile and do custom mapping
-	if p, ok := m.Config.Profiles[*domain]; ok {
+	if p, ok := m.Config.Profiles[domain]; ok {
 		c.Meta.Profile = []string{p}
 
 		// map to profile
@@ -192,7 +214,7 @@ func getSingleCoding(codes []fhir.CodeableConcept) *fhir.Coding {
 	return nil
 }
 
-func (m *GicsMapper) setDomainExtension(extensions []fhir.Extension, domain *string) []fhir.Extension {
+func (m *GicsMapper) setDomainExtension(extensions []fhir.Extension, domain string) []fhir.Extension {
 
 	for _, e := range extensions {
 		if e.Url == "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference" {
@@ -205,8 +227,8 @@ func (m *GicsMapper) setDomainExtension(extensions []fhir.Extension, domain *str
 			}
 
 			if refIndex >= 0 {
-				domainRef := fmt.Sprintf("ResearchStudy?identifier=%s|%s", *m.Config.DomainSystem, *domain)
-				e.Extension[refIndex] = fhir.Extension{Url: "domain", ValueReference: &fhir.Reference{Reference: &domainRef, Display: domain}}
+				domainRef := fmt.Sprintf("ResearchStudy?identifier=%s|%s", *m.Config.DomainSystem, domain)
+				e.Extension[refIndex] = fhir.Extension{Url: "domain", ValueReference: &fhir.Reference{Reference: &domainRef, Display: &domain}}
 			}
 		}
 	}
