@@ -109,6 +109,9 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain string, pid string
 
 	// create domain reference (ResearchSubject)
 	study, err := m.Client.GetConsentDomain(*domainRef)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get ResearchStudy resource for domain '%s': %w", domain, err)
+	}
 
 	studyData, err := fhir.ResearchStudy{
 		Identifier: []fhir.Identifier{{
@@ -119,6 +122,9 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain string, pid string
 		Status:      study.Status,
 		Description: study.Description,
 	}.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
 
 	// build Bundle
 	return &fhir.Bundle{
