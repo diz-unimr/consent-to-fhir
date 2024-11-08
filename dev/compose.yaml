@@ -16,7 +16,6 @@ services:
     image: confluentinc/cp-kafka:7.6.1
     ports:
       - "9092:9092"
-      - "9093:9093"
     environment:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:19092,LISTENER_DOCKER_EXTERNAL://172.17.0.1:9093,LISTENER_EXTERNAL://127.0.0.1:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
@@ -30,6 +29,11 @@ services:
       KAFKA_COMPRESSION_TYPE: gzip
     depends_on:
       - zoo
+    healthcheck:
+      test: kafka-topics --bootstrap-server kafka:9092 --list
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   akhq:
     image: tchiotludo/akhq:0.25.0
@@ -72,3 +76,14 @@ services:
       - "host.docker.internal:host-gateway"
     depends_on:
       - mysql
+
+  consent-data-loader:
+    image: confluentinc/cp-kafkacat:7.1.12
+    entrypoint: ["/bin/bash", "-c"]
+    command: >
+      "kafkacat -b kafka:19092 -K: -t consent-json -P -l /data/consent-data.ndjson"
+    volumes:
+      - ./consent-data.ndjson:/data/consent-data.ndjson:ro
+    depends_on:
+      kafka:
+        condition: service_healthy

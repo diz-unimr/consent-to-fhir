@@ -87,7 +87,7 @@
                       "display": "Erfassung neuer identifizierender Daten (IDAT)"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.2",
                       "display": "IDAT_erheben"
                     }
@@ -184,7 +184,7 @@
                       "display": "Rekontaktierung bezüglich Zusatzbefund im Rahmen der am Standort dafür entwickelten Prozesse und der im Nutzungsantrag angegebenen Bedingungen"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.31",
                       "display": "Rekontaktierung_Zusatzbefund"
                     }
@@ -281,7 +281,7 @@
                       "display": "Erfassung medizinischer Daten (MDAT)"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.6",
                       "display": "MDAT_erheben"
                     }
@@ -378,7 +378,7 @@
                       "display": "Bereitstellung umcodierter medizinischer Daten (MDAT) für wissenschaftliche Nutzung zu Zwecken med. Forschung an externe Forscher"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.8",
                       "display": "MDAT_wissenschaftlich_nutzen_EU_DSGVO_NIVEAU"
                     }
@@ -475,7 +475,7 @@
                       "display": "Rekontaktierung zur Verknüpfung von Patientendaten mit Daten anderer Datenbanken"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.27",
                       "display": "Rekontaktierung_Verknuepfung_Datenbanken"
                     }
@@ -572,7 +572,7 @@
                       "display": "Rekontaktierung bezüglich Information zu neuen Forschungsvorhaben oder Studien"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.29",
                       "display": "Rekontaktierung_weitere_Studien"
                     }
@@ -669,7 +669,7 @@
                       "display": "Herausgabe identifizierender Daten (IDAT) an unabhängige Treuhandstelle zur weiteren Verarbeitung"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.5",
                       "display": "IDAT_bereitstellen_EU_DSGVO_NIVEAU"
                     }
@@ -766,7 +766,7 @@
                       "display": "Speicherung und Verarbeitung identifizierender Daten (IDAT) zu Zwecken med. Forschung in der verantwortlichen Stelle"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.3",
                       "display": "IDAT_speichern_verarbeiten"
                     }
@@ -863,7 +863,7 @@
                       "display": "Speicherung und Verarbeitung von medizinischen codierten Daten zu Zwecken med. Forschung innerhalb der verantwortlichen Stelle (MDAT)"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.7",
                       "display": "MDAT_speichern_verarbeiten"
                     }
@@ -960,7 +960,7 @@
                       "display": "Rekontaktierung des Betroffenen bei Ergebnissen von erheblicher Bedeutung"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.37",
                       "display": "Rekontaktierung_Ergebnisse_erheblicher_Bedeutung"
                     }
@@ -1057,7 +1057,7 @@
                       "display": "Rekontaktierung bezüglich Erhebung zusätzlicher Daten"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.28",
                       "display": "Rekontaktierung_weitere_Erhebung"
                     }
@@ -1154,7 +1154,7 @@
                       "display": "Zusammenführung identifizierender Daten (IDAT) über die unabhängige Treuhandstelle mit Dritten Forschungspartnern, sofern dort eine Einwilligung vorliegt"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.4",
                       "display": "IDAT_zusammenfuehren_Dritte"
                     }
@@ -1251,7 +1251,7 @@
                       "display": "Zusammenführung medizinischer Daten (MDAT) mit Dritten Forschungspartnern, sofern dort eine Einwilligung vorliegt"
                     },
                     {
-                      "system": "https://www.medizininformatik-initiative.de/fhir/ValueSet/MiiConsentPolicyValueSet",
+                      "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
                       "code": "2.16.840.1.113883.3.1937.777.24.5.3.9",
                       "display": "MDAT_zusammenfuehren_Dritte"
                     }

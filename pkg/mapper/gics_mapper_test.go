@@ -56,6 +56,18 @@ func (c *TestGicsClient) Auth() *config.Auth {
 	return nil
 }
 
+func (c *TestGicsClient) GetConsentDomain(_ string) (*fhir.ResearchStudy, error) {
+	return &fhir.ResearchStudy{
+		Identifier: []fhir.Identifier{{
+			System: Of("http://fhir.local/sid/consent-domain-id"),
+			Value:  Of("Test"),
+		}},
+		Title:       Of("Test"),
+		Status:      fhir.ResearchStudyStatusActive,
+		Description: Of("Test domain"),
+	}, nil
+}
+
 func (c *TestGicsClient) GetConsentStatus(_ model.SignerId, _, _ string) (*fhir.Bundle, error) {
 	testFile, _ := os.Open(c.respFilePath)
 	b, _ := io.ReadAll(testFile)

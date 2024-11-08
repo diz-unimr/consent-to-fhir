@@ -98,9 +98,30 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain string, pid string
 		Provision: mergePolicies(bundle.Entry),
 	}
 
+	domainRef := m.getDomainReference(c.Extension)
+
 	// map
 	r := m.mapConsent(c, domain, pid)
 	data, err := r.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+
+	// create domain reference (ResearchSubject)
+	study, err := m.Client.GetConsentDomain(*domainRef)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get ResearchStudy resource for domain '%s': %w", domain, err)
+	}
+
+	studyData, err := fhir.ResearchStudy{
+		Identifier: []fhir.Identifier{{
+			System: m.Config.DomainSystem,
+			Value:  &domain,
+		}},
+		Title:       study.Title,
+		Status:      study.Status,
+		Description: study.Description,
+	}.MarshalJSON()
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +135,17 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain string, pid string
 				Request: &fhir.BundleEntryRequest{
 					Method: fhir.HTTPVerbPUT,
 					Url:    fmt.Sprintf("Consent?identifier=%s|%s", *m.Config.ConsentSystem, *r.Id),
-				}}}}, nil
+				},
+			},
+			{
+				Resource: studyData,
+				Request: &fhir.BundleEntryRequest{
+					Method:      fhir.HTTPVerbPOST,
+					IfNoneExist: Of(fmt.Sprintf("identifier=%s|%s", *m.Config.DomainSystem, domain)),
+					Url:         "ResearchStudy",
+				},
+			},
+		}}, nil
 }
 
 func (m *GicsMapper) mapConsent(c fhir.Consent, domain string, pid string) fhir.Consent {
@@ -234,6 +265,21 @@ func (m *GicsMapper) setDomainExtension(extensions []fhir.Extension, domain stri
 	}
 
 	return extensions
+}
+
+func (m *GicsMapper) getDomainReference(extensions []fhir.Extension) *string {
+
+	for _, e := range extensions {
+		if e.Url == "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference" {
+			for _, ext := range e.Extension {
+				if ext.Url == "domain" {
+					return ext.ValueReference.Reference
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 func hash(values ...string) string {
