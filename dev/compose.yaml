@@ -53,7 +53,7 @@ services:
       - kafka
 
   mysql:
-    image: mysql:8
+    image: mysql:9
     container_name: gics-mysql
     restart: unless-stopped
     environment:
