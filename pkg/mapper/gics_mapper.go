@@ -83,8 +83,8 @@ func (m *GicsMapper) mapResources(bundle *fhir.Bundle, domain string, pid string
 	if len(bundle.Entry) == 0 {
 
 		// no consent resources found indicates invalidation (or inconsistent data)
-		log.WithField("id", pid).Warn("No Consent resource found in gICS FHIR bundle. "+
-			"Consent may have been invalidated. Creating delete request", "id", pid)
+		log.WithField("id", pid).Warn("No Consent resource found in gICS FHIR bundle. " +
+			"Consent may have been invalidated. Creating delete request")
 
 		// return delete request
 		return m.createDeleteBundle(domain, pid)

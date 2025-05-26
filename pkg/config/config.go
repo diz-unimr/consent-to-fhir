@@ -75,7 +75,7 @@ func LoadConfig(path string) (*AppConfig, error) {
 }
 
 func parseEnv(k *koanf.Koanf, s string) string {
-	r := "^" + strings.Replace(strings.ToLower(s), "_", "(.|-)", -1) + "$"
+	r := "^" + strings.ReplaceAll(strings.ToLower(s), "_", "(.|-)") + "$"
 
 	for _, p := range k.Keys() {
 		match, _ := regexp.MatchString(r, p)
