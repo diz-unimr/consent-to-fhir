@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: setup go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: 1.22
           cache: false
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v8
+        uses: golangci/golangci-lint-action@v9
         with:
           version: latest
           args: --timeout 10m
@@ -25,9 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: setup go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: 1.22
 
@@ -37,6 +37,6 @@ jobs:
         run: go test -gcflags=-l -v  -coverprofile=coverage.txt -covermode=atomic ./...
 
       - name: upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
